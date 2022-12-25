@@ -1,0 +1,10 @@
+.idea/
+.DS_Store
+
+go.sum
+peroblogo
+peroblogo.*
+dsn
+log
+
+*.conf.yaml
