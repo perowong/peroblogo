@@ -1,12 +1,11 @@
-package routers
+package controller
 
 import (
 	"log"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/perowong/peroblogo/dao"
-	"github.com/perowong/peroblogo/utils"
+	"github.com/perowong/peroblogo/model"
 )
 
 type AddCommentReq struct {
@@ -32,12 +31,12 @@ func AddComment(c *gin.Context) {
 	var req AddCommentReq
 	var err error
 
-	ctxUtils := &utils.GinCtxUtils{Context: c}
+	ctxUtils := &GinCtxUtils{Context: c}
 	if !ctxUtils.GetReqObject(&req) {
 		return
 	}
 
-	daoComment := &dao.Comment{
+	daoComment := &model.Comment{
 		BlogID:       req.BlogID,
 		ParentID:     req.ParentID,
 		ReplyID:      req.ReplyID,
@@ -50,7 +49,7 @@ func AddComment(c *gin.Context) {
 		Content:      req.Content,
 	}
 
-	daoObj := dao.NewDao()
+	daoObj := model.NewModel()
 
 	if daoComment.ReplyID != 0 {
 		cResp, err := daoObj.CheckExistByID(daoComment.ReplyID)
@@ -61,7 +60,7 @@ func AddComment(c *gin.Context) {
 		}
 	}
 
-	var parentComment *dao.Comment
+	var parentComment *model.Comment
 	if daoComment.ParentID != 0 {
 		parentComment, err = daoObj.ReadComment(daoComment.ParentID)
 		if parentComment.ID == 0 || err != nil {
@@ -98,18 +97,18 @@ type ListCommentReq struct {
 }
 
 type ListCommentResp struct {
-	List []*dao.Comment
+	List []*model.Comment
 }
 
 // Query comment list
 func ListComment(c *gin.Context) {
 	var req ListCommentReq
-	ctxUtils := &utils.GinCtxUtils{Context: c}
+	ctxUtils := &GinCtxUtils{Context: c}
 	if !ctxUtils.GetReqObject(&req) {
 		return
 	}
 
-	daoObj := dao.NewDao()
+	daoObj := model.NewModel()
 
 	list, err := daoObj.ListCommentByBlogID(req.BlogID)
 	if err != nil {
@@ -119,7 +118,7 @@ func ListComment(c *gin.Context) {
 	}
 
 	if len(list) == 0 {
-		ctxUtils.ReplyOk(&ListCommentResp{List: make([]*dao.Comment, 0)})
+		ctxUtils.ReplyOk(&ListCommentResp{List: make([]*model.Comment, 0)})
 		return
 	}
 

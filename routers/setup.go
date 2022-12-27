@@ -2,12 +2,25 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/perowong/peroblogo/conf"
+	"github.com/perowong/peroblogo/controller"
 )
 
-func Setup(gin *gin.Engine) {
-	group := gin.Group("comment")
+func SetupRouters() *gin.Engine {
+	if conf.Env == "prod" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
+	r := gin.Default()
+	groupRouters(r)
+
+	return r
+}
+
+func groupRouters(r *gin.Engine) {
+	group := r.Group("comment")
 	{
-		group.POST("/add", AddComment)
-		group.POST("/list", ListComment)
+		group.POST("/add", controller.AddComment)
+		group.POST("/list", controller.ListComment)
 	}
 }

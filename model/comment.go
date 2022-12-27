@@ -1,4 +1,4 @@
-package dao
+package model
 
 import (
 	"database/sql"
@@ -24,8 +24,8 @@ type Comment struct {
 	Children     []*Comment
 }
 
-func (d *Dao) AddComment(comment *Comment) (id int64, err error) {
-	result, err := d.DB.Exec(`
+func (m *Model) AddComment(comment *Comment) (id int64, err error) {
+	result, err := m.DB.Exec(`
 		INSERT INTO Comment (
 			BlogID,
 			ParentID,
@@ -62,8 +62,8 @@ func (d *Dao) AddComment(comment *Comment) (id int64, err error) {
 	return
 }
 
-func (d *Dao) CheckExistByID(id int64) (comment *Comment, err error) {
-	err = d.DB.QueryRow(`
+func (m *Model) CheckExistByID(id int64) (comment *Comment, err error) {
+	err = m.DB.QueryRow(`
 		SELECT ID FROM Comment WHERE ID=?
 	`, id).Scan(&comment.ID)
 
@@ -74,9 +74,9 @@ func (d *Dao) CheckExistByID(id int64) (comment *Comment, err error) {
 	return
 }
 
-func (d *Dao) ReadComment(id int64) (comment *Comment, err error) {
+func (m *Model) ReadComment(id int64) (comment *Comment, err error) {
 	comment = &Comment{}
-	err = d.DB.QueryRow(`
+	err = m.DB.QueryRow(`
 		SELECT * FROM Comment WHERE ID=?
 	`, id).Scan(
 		&comment.ID,
@@ -103,8 +103,8 @@ func (d *Dao) ReadComment(id int64) (comment *Comment, err error) {
 	return
 }
 
-func (d *Dao) UpdateSubCount(id int64, count int64) (err error) {
-	_, err = d.DB.Exec(
+func (m *Model) UpdateSubCount(id int64, count int64) (err error) {
+	_, err = m.DB.Exec(
 		`UPDATE Comment set SubCount=? WHERE ID=?`,
 		count,
 		id,
@@ -116,7 +116,7 @@ func (d *Dao) UpdateSubCount(id int64, count int64) (err error) {
 	return
 }
 
-func (d *Dao) getCommentList(rows *sql.Rows) (list []*Comment, err error) {
+func (m *Model) getCommentList(rows *sql.Rows) (list []*Comment, err error) {
 	for rows.Next() {
 		comment := &Comment{}
 		err = rows.Scan(
@@ -144,8 +144,8 @@ func (d *Dao) getCommentList(rows *sql.Rows) (list []*Comment, err error) {
 	return
 }
 
-func (d *Dao) ListCommentByBlogID(blogId string) (list []*Comment, err error) {
-	rows, err := d.DB.Query(`
+func (m *Model) ListCommentByBlogID(blogId string) (list []*Comment, err error) {
+	rows, err := m.DB.Query(`
 		SELECT * FROM Comment WHERE BlogID=? AND ParentID=0
 		ORDER BY Likes, Ct DESC
 	`, blogId)
@@ -154,11 +154,11 @@ func (d *Dao) ListCommentByBlogID(blogId string) (list []*Comment, err error) {
 	}
 	defer rows.Close()
 
-	return d.getCommentList(rows)
+	return m.getCommentList(rows)
 }
 
-func (d *Dao) ListCommentByParentID(parentId int64) (list []*Comment, err error) {
-	rows, err := d.DB.Query(`
+func (m *Model) ListCommentByParentID(parentId int64) (list []*Comment, err error) {
+	rows, err := m.DB.Query(`
 		SELECT * FROM Comment WHERE ParentID=?
 		ORDER BY Likes, Ct DESC
 	`, parentId)
@@ -167,5 +167,5 @@ func (d *Dao) ListCommentByParentID(parentId int64) (list []*Comment, err error)
 	}
 	defer rows.Close()
 
-	return d.getCommentList(rows)
+	return m.getCommentList(rows)
 }

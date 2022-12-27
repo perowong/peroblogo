@@ -1,4 +1,4 @@
-package errcode
+package controller
 
 type ErrCodeType int
 

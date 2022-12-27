@@ -1,4 +1,4 @@
-package utils
+package controller
 
 import (
 	"fmt"
@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
-	"github.com/perowong/peroblogo/utils/errcode"
 )
 
 type GinCtxUtils struct {
@@ -33,7 +32,7 @@ func (c *GinCtxUtils) GetReqObject(req interface{}) (ok bool) {
 	err := c.ShouldBindBodyWith(req, binding.JSON)
 	if err != nil {
 		errMsg := c.GetFieldValidatedErr(err)
-		c.ReplyFail(errcode.ErrCodeParam, errMsg)
+		c.ReplyFail(ErrCodeParam, errMsg)
 		return false
 	}
 
@@ -41,12 +40,12 @@ func (c *GinCtxUtils) GetReqObject(req interface{}) (ok bool) {
 }
 
 type Resp struct {
-	ErrCode errcode.ErrCodeType
+	ErrCode ErrCodeType
 	ErrMsg  string
 	Data    interface{}
 }
 
-func (c *GinCtxUtils) Reply(errCode errcode.ErrCodeType, errMsg string, data interface{}) {
+func (c *GinCtxUtils) Reply(errCode ErrCodeType, errMsg string, data interface{}) {
 	resp := &Resp{
 		ErrCode: errCode,
 		ErrMsg:  errMsg,
@@ -57,17 +56,17 @@ func (c *GinCtxUtils) Reply(errCode errcode.ErrCodeType, errMsg string, data int
 }
 
 func (c *GinCtxUtils) ReplyOk(data interface{}) {
-	c.Reply(errcode.ErrCodeOk, "ok", data)
+	c.Reply(ErrCodeOk, "ok", data)
 }
 
-func (c *GinCtxUtils) ReplyFail(errCode errcode.ErrCodeType, errMsg string) {
+func (c *GinCtxUtils) ReplyFail(errCode ErrCodeType, errMsg string) {
 	c.Reply(errCode, fmt.Sprintf("fail: %s", errMsg), nil)
 }
 
 func (c *GinCtxUtils) ReplyFailParam() {
-	c.ReplyFail(errcode.ErrCodeParam, errcode.CodeMap[errcode.ErrCodeParam])
+	c.ReplyFail(ErrCodeParam, CodeMap[ErrCodeParam])
 }
 
 func (c *GinCtxUtils) ReplyFailServer() {
-	c.ReplyFail(errcode.ErrCodeServer, errcode.CodeMap[errcode.ErrCodeServer])
+	c.ReplyFail(ErrCodeServer, CodeMap[ErrCodeServer])
 }

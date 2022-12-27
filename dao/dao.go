@@ -1,21 +1,25 @@
 package dao
 
 import (
+	"log"
+
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+	"github.com/perowong/peroblogo/conf"
 )
 
-var db *sqlx.DB
-
-func Setup(dbCtx *sqlx.DB) {
-	db = dbCtx
-}
-
-type Dao struct {
+var (
 	DB *sqlx.DB
-}
+)
 
-func NewDao() (d *Dao) {
-	return &Dao{
-		DB: db,
+func ConnectMysql() *sqlx.DB {
+	DB, err := sqlx.Connect("mysql", conf.C.Mysql["db-peroblog"].Dsn)
+	if err != nil {
+		log.Fatalln(err.Error())
 	}
+
+	DB.SetMaxOpenConns(50)
+	DB.SetMaxIdleConns(5)
+
+	return DB
 }
