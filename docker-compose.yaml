@@ -1,0 +1,19 @@
+version: "3"
+services:
+  mysql8031-master:
+    image: "mysql:8.0.31"
+    ports:
+      - "3306:3306"
+    command: "--default-authentication-plugin=mysql_native_password --init-file /data/application/init.sql"
+    environment:
+      MYSQL_ROOT_PASSWORD: "test1234"
+      MYSQL_DATABASE: "peroblog"
+    volumes:
+      - ./init.sql:/data/application/init.sql
+  peroblogo:
+    build: .
+    command: sh -c "./wait-for.sh mysql8031-master:3306 -- ./peroblogo -env=prod"
+    depends_on:
+      - mysql8031-master
+    ports:
+      - "8080:8080"

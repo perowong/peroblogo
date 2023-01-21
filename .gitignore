@@ -7,4 +7,4 @@ peroblogo.*
 dsn
 log
 
-*.conf.yaml
+*.prod.yaml

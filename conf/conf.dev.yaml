@@ -1,0 +1,6 @@
+app:
+  name: "peroblogo"
+  port: "8080"
+mysql:
+  db-peroblog:
+    dsn: "root:test1234@tcp(127.0.0.1:3306)/peroblog?parseTime=true"

@@ -28,7 +28,7 @@ var (
 
 func loadLocalConfig(env string) {
 	pwd, _ := os.Getwd()
-	configName := fmt.Sprintf("%s.conf.yaml", env)
+	configName := fmt.Sprintf("conf.%s.yaml", env)
 
 	data, err := utils.ReadFile(filepath.Join(pwd, "conf", configName))
 	if err != nil {
