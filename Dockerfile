@@ -16,12 +16,12 @@ FROM debian:stretch-slim
 
 COPY ./wait-for.sh /
 COPY ./conf /conf
+COPY sources.list .
 
 COPY --from=builder /build/peroblogo /
 
-RUN mv sources.list /etc/apt/sources.list.bak; \
-    mv sources.list /etc/apt/; \
-    set -eux; \
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && mv sources.list /etc/apt/;
+RUN set -eux; \
 	apt-get update; \
 	apt-get install -y \
 		--no-install-recommends \
