@@ -19,10 +19,9 @@ COPY ./conf /conf
 
 COPY --from=builder /build/peroblogo /
 
-ENV http_proxy=http://mirrors.aliyun.com/debian/
-ENV https_proxy=http://mirrors.aliyun.com/debian/
-
-RUN set -eux; \
+RUN mv sources.list /etc/apt/sources.list.bak; \
+    mv sources.list /etc/apt/; \
+    set -eux; \
 	apt-get update; \
 	apt-get install -y \
 		--no-install-recommends \
