@@ -1,18 +1,15 @@
 FROM golang:alpine AS builder
 
-ENV GO111MODULE=on \
-    CGO_ENABLED=0 \
-    GOOS=linux \
-    GOARCH=amd64 \
-    GOPROXY=https://goproxy.io,https://goproxy.cn,direct
-
 WORKDIR /build
+# RUN adduser -u 10001 -D app-runner
 
-COPY . .
+ENV GOPROXY https://goproxy.cn
 COPY go.mod .
+COPY go.sum .
 RUN go mod download
 
-RUN go build -o peroblogo .
+COPY . .
+RUN CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -o peroblogo .
 
 # create a new slim container
 FROM debian:stretch-slim
@@ -21,6 +18,9 @@ COPY ./wait-for.sh /
 COPY ./conf /conf
 
 COPY --from=builder /build/peroblogo /
+
+ENV http_proxy=http://mirrors.aliyun.com/debian/
+ENV https_proxy=http://mirrors.aliyun.com/debian/
 
 RUN set -eux; \
 	apt-get update; \
