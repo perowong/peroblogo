@@ -18,7 +18,7 @@ func SetupRouters() *gin.Engine {
 }
 
 func groupRouters(r *gin.Engine) {
-	group := r.Group("comment")
+	group := r.Group("api/comment")
 	{
 		group.POST("/add", controller.AddComment)
 		group.POST("/list", controller.ListComment)
