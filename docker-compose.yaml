@@ -12,7 +12,7 @@ services:
       - ./init.sql:/data/application/init.sql
   peroblogo:
     build: .
-    command: sh -c "./wait-for.sh mysql8031-master:3306 -- ./peroblogo -env=prod"
+    command: sh -c "./wait-for.sh mysql8031-master:3306 -- ./peroblogo"
     depends_on:
       - mysql8031-master
     ports:
