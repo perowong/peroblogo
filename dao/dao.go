@@ -13,7 +13,9 @@ var (
 )
 
 func ConnectMysql() *sqlx.DB {
-	DB, err := sqlx.Connect("mysql", conf.C.Mysql["db-peroblog"].Dsn)
+	var err error
+
+	DB, err = sqlx.Connect("mysql", conf.C.Mysql["db-peroblog"].Dsn)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
