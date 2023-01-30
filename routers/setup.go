@@ -8,7 +8,7 @@ import (
 )
 
 func SetupRouters() *gin.Engine {
-	if conf.Env == "prod" {
+	if conf.Env != "dev" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
