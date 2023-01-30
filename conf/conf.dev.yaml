@@ -3,4 +3,7 @@ app:
   port: "8080"
 mysql:
   db-peroblog:
-    dsn: "root:test1234@tcp(mysql8031-master:3306)/peroblog?parseTime=true"
+    dsn: "root:test1234@tcp(127.0.0.1:3306)/peroblog?parseTime=true"
+github:
+  client-id: "5598a074bbf4c0df5792"
+  client-secret: "04fee23e05240af963cc1e9b8b111b71101c2174"

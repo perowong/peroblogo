@@ -5,42 +5,72 @@ import (
 	"github.com/perowong/peroblogo/scripts"
 )
 
-var createCommentTableSql string = `CREATE TABLE Comment (
-	ID int NOT NULL AUTO_INCREMENT,
-	BlogID char(16) NOT NULL, -- index
-	ParentID int NOT NULL,
-	ReplyID int NOT NULL,
-	FromUid char(36) NOT NULL,
-	FromNickname varchar(100) NOT NULL,
-	FromEmail varchar(255),
-	ToUid char(36),
-	ToNickname varchar(100),
-	ToEmail varchar(255),
-	Likes int NOT NULL DEFAULT 0,
-	Content varchar(600) NOT NULL DEFAULT '',
-	SubCount int NOT NULL DEFAULT 0,
-	IsTop tinyint NOT NULL DEFAULT 0, -- 0: no, 1: yes
-	Ct timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (ID),
-	INDEX idx_blogid (BlogID),
-	INDEX idx_parentid (ParentID)
+var createCommentTableSql string = `CREATE TABLE comment (
+	id int NOT NULL AUTO_INCREMENT,
+	blog_id char(16) NOT NULL, -- index
+	parent_id int NOT NULL,
+	reply_id int NOT NULL,
+	from_uid int,
+	from_nickname varchar(100),
+	from_avatar varchar(255),
+	to_uid int,
+	to_nickname varchar(100),
+	to_avatar varchar(255),
+	likes int NOT NULL DEFAULT 0,
+	content varchar(600) NOT NULL DEFAULT '',
+	sub_count int NOT NULL DEFAULT 0,
+	is_top tinyint NOT NULL DEFAULT 0, -- 0: no, 1: yes
+	ct timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (id),
+	INDEX idx_blog_id (blog_id),
+	INDEX idx_parent_id (parent_id)
 ) ENGINE=InnoDB
 	AUTO_INCREMENT=10000
 	DEFAULT
 	CHARSET=utf8mb4
 	COLLATE=utf8mb4_0900_ai_ci;`
 
-var createLikeTableSql string = `CREATE TABLE UserLike (
-	ID int NOT NULL AUTO_INCREMENT,
-	SubjectID int NOT NULL, -- index, refer to comment id
-	SubjectType tinyint NOT NULL, -- 1: blog, 2: comment
-	FromUid char(36) NOT NULL,
-	FromEmail varchar(255),
-	Liked tinyint NOT NULL DEFAULT 0, -- 0: unlike, 1: like
-	PRIMARY KEY (ID),
-	INDEX idx_subjectid (SubjectID)
+var createLikeTableSql string = `CREATE TABLE user_like (
+	id int NOT NULL AUTO_INCREMENT,
+	subject_id int NOT NULL, -- index, refer to comment id
+	subject_type tinyint NOT NULL, -- 1: blog, 2: comment
+	from_uid int,
+	from_nickname varchar(100),
+	from_avatar varchar(255),
+	liked tinyint NOT NULL DEFAULT 0, -- 0: unlike, 1: like
+	PRIMARY KEY (id),
+	INDEX idx_subject_id (subject_id)
 ) ENGINE=InnoDB
 	AUTO_INCREMENT=10000
+	DEFAULT
+	CHARSET=utf8mb4
+	COLLATE=utf8mb4_0900_ai_ci;`
+
+var createUserTableSql string = `CREATE TABLE user (
+	id int NOT NULL AUTO_INCREMENT,
+	openid varchar(255),
+	auth_type char(36),
+	nickname varchar(255) NOT NULL,
+	avatar_url varchar(255) NOT NULL,
+	email varchar(255),
+	ct timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (id),
+	INDEX idx_openid (openid)
+) ENGINE=InnoDB
+	AUTO_INCREMENT=10000
+	DEFAULT
+	CHARSET=utf8mb4
+	COLLATE=utf8mb4_0900_ai_ci;`
+
+var createUserTokenTableSql string = `CREATE TABLE user_token (
+	user_id int,
+	token varchar(255),
+	ct timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	ut timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	expire_time timestamp,
+	PRIMARY KEY (user_id),
+	INDEX idx_token (token)
+) ENGINE=InnoDB
 	DEFAULT
 	CHARSET=utf8mb4
 	COLLATE=utf8mb4_0900_ai_ci;`
@@ -50,4 +80,7 @@ func main() {
 
 	sqlCtx(createCommentTableSql)
 	sqlCtx(createLikeTableSql)
+
+	sqlCtx(createUserTableSql)
+	sqlCtx(createUserTokenTableSql)
 }

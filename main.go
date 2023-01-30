@@ -10,6 +10,8 @@ import (
 )
 
 func main() {
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+
 	db := dao.ConnectMysql()
 	defer db.Close()
 

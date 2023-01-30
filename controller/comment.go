@@ -12,12 +12,12 @@ type AddCommentReq struct {
 	BlogID       string `binding:"required"`
 	ParentID     int64
 	ReplyID      int64
-	FromUid      string `binding:"required"`
+	FromUid      int64  `binding:"required"`
 	FromNickname string `binding:"required"`
-	FromEmail    string `binding:"required,email"`
-	ToUid        string
+	FromAvatar   string
+	ToUid        int64
 	ToNickname   string
-	ToEmail      string
+	ToAvatar     string
 	Content      string `binding:"required,min=1,max=600"`
 }
 
@@ -42,18 +42,18 @@ func AddComment(c *gin.Context) {
 		ReplyID:      req.ReplyID,
 		FromUid:      req.FromUid,
 		FromNickname: req.FromNickname,
-		FromEmail:    req.FromEmail,
+		FromAvatar:   req.FromAvatar,
 		ToUid:        req.ToUid,
 		ToNickname:   req.ToNickname,
-		ToEmail:      req.ToEmail,
+		ToAvatar:     req.ToAvatar,
 		Content:      req.Content,
 	}
 
 	daoObj := model.NewModel()
 
 	if daoComment.ReplyID != 0 {
-		cResp, err := daoObj.CheckExistByID(daoComment.ReplyID)
-		if cResp.ID == 0 || err != nil {
+		exist, err := daoObj.CheckCommentExistBy(daoComment.ReplyID)
+		if !exist || err != nil {
 			log.Println(err.Error())
 			ctxUtils.ReplyFailParam()
 			return

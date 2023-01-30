@@ -19,6 +19,10 @@ type Conf struct {
 	Mysql map[string]struct {
 		Dsn string
 	}
+	Github struct {
+		ClientID     string `yaml:"client-id"`
+		ClientSecret string `yaml:"client-secret"`
+	}
 }
 
 var (
