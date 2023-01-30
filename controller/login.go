@@ -57,7 +57,7 @@ func Login(c *gin.Context) {
 	daoObj := model.NewModel()
 	userID, err := daoObj.GetUserIDBy(strconv.Itoa(githubUserResp.OpenID))
 	if err != nil {
-		log.Println(err.Error())
+		log.Printf("%#v", err)
 		ctxUtils.ReplyFailServer()
 		return
 	}
@@ -72,7 +72,7 @@ func Login(c *gin.Context) {
 		})
 
 		if err != nil {
-			log.Println(err.Error())
+			log.Printf("%#v", err)
 			ctxUtils.ReplyFailServer()
 			return
 		}
@@ -81,21 +81,21 @@ func Login(c *gin.Context) {
 	var token string
 	exist, err := daoObj.CheckUserTokenExistBy(userID)
 	if err != nil {
-		log.Println(err.Error())
+		log.Printf("%#v", err)
 		ctxUtils.ReplyFailServer()
 		return
 	}
 	if !exist {
 		token, err = daoObj.AddUserToken(userID)
 		if err != nil {
-			log.Println(err.Error())
+			log.Printf("%#v", err)
 			ctxUtils.ReplyFailServer()
 			return
 		}
 	} else {
 		token, err = daoObj.UpdateUserTokenByUserID(userID)
 		if err != nil {
-			log.Println(err.Error())
+			log.Printf("%#v", err)
 			ctxUtils.ReplyFailServer()
 			return
 		}

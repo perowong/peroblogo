@@ -16,7 +16,7 @@ func GetSqlExecContext() func(sql string) {
 	return func(sql string) {
 		_, err := db.Exec(sql)
 		if err != nil {
-			log.Println(err.Error())
+			log.Printf("%#v", err)
 		}
 	}
 }

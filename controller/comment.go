@@ -54,7 +54,7 @@ func AddComment(c *gin.Context) {
 	if daoComment.ReplyID != 0 {
 		exist, err := daoObj.CheckCommentExistBy(daoComment.ReplyID)
 		if !exist || err != nil {
-			log.Println(err.Error())
+			log.Printf("%#v", err)
 			ctxUtils.ReplyFailParam()
 			return
 		}
@@ -63,8 +63,8 @@ func AddComment(c *gin.Context) {
 	var parentComment *model.Comment
 	if daoComment.ParentID != 0 {
 		parentComment, err = daoObj.ReadComment(daoComment.ParentID)
-		if parentComment.ID == 0 || err != nil {
-			log.Println(err.Error())
+		if parentComment.ID == 0 || parentComment.ParentID != 0 || err != nil {
+			log.Printf("%#v", err)
 			ctxUtils.ReplyFailParam()
 			return
 		}
@@ -72,7 +72,7 @@ func AddComment(c *gin.Context) {
 
 	id, err := daoObj.AddComment(daoComment)
 	if err != nil {
-		log.Println(err.Error())
+		log.Printf("%#v", err)
 		ctxUtils.ReplyFailServer()
 		return
 	}
@@ -80,7 +80,7 @@ func AddComment(c *gin.Context) {
 	if parentComment != nil {
 		err = daoObj.UpdateSubCount(parentComment.ID, parentComment.SubCount+1)
 		if err != nil {
-			log.Println(err.Error())
+			log.Printf("%#v", err)
 			ctxUtils.ReplyFailServer()
 			return
 		}
@@ -112,7 +112,7 @@ func ListComment(c *gin.Context) {
 
 	list, err := daoObj.ListCommentByBlogID(req.BlogID)
 	if err != nil {
-		log.Println(err.Error())
+		log.Printf("%#v", err)
 		ctxUtils.ReplyFailServer()
 		return
 	}
@@ -126,7 +126,7 @@ func ListComment(c *gin.Context) {
 		if item.SubCount != 0 {
 			subList, err := daoObj.ListCommentByParentID(item.ID)
 			if err != nil {
-				log.Println(err.Error())
+				log.Printf("%#v", err)
 				ctxUtils.ReplyFailServer()
 				return
 			}

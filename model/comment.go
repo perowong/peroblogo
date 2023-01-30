@@ -78,30 +78,7 @@ func (m *Model) CheckCommentExistBy(id int64) (bool, error) {
 
 func (m *Model) ReadComment(id int64) (comment *Comment, err error) {
 	comment = &Comment{}
-	err = m.DB.QueryRow(`
-		SELECT * FROM comment WHERE id=?
-	`, id).Scan(
-		&comment.ID,
-		&comment.BlogID,
-		&comment.ParentID,
-		&comment.ReplyID,
-		&comment.FromUid,
-		&comment.FromNickname,
-		&comment.FromAvatar,
-		&comment.ToUid,
-		&comment.ToNickname,
-		&comment.ToAvatar,
-		&comment.Likes,
-		&comment.Content,
-		&comment.SubCount,
-		&comment.IsTop,
-		&comment.Ct,
-	)
-
-	if err != nil {
-		return
-	}
-
+	err = m.DB.Get(comment, `SELECT * FROM comment WHERE id=?`, id)
 	return
 }
 
@@ -118,56 +95,18 @@ func (m *Model) UpdateSubCount(id int64, count int64) (err error) {
 	return
 }
 
-func (m *Model) getCommentList(rows *sql.Rows) (list []*Comment, err error) {
-	for rows.Next() {
-		comment := &Comment{}
-		err = rows.Scan(
-			&comment.ID,
-			&comment.BlogID,
-			&comment.ParentID,
-			&comment.ReplyID,
-			&comment.FromUid,
-			&comment.FromNickname,
-			&comment.FromAvatar,
-			&comment.ToUid,
-			&comment.ToNickname,
-			&comment.ToAvatar,
-			&comment.Likes,
-			&comment.Content,
-			&comment.SubCount,
-			&comment.IsTop,
-			&comment.Ct,
-		)
-		if err != nil {
-			return
-		}
-		list = append(list, comment)
-	}
+func (m *Model) ListCommentByBlogID(blogId string) (list []*Comment, err error) {
+	list = []*Comment{}
+	err = m.DB.Select(&list,
+		`SELECT * FROM comment WHERE blog_id=? AND parent_id=0`,
+		blogId)
 	return
 }
 
-func (m *Model) ListCommentByBlogID(blogId string) (list []*Comment, err error) {
-	rows, err := m.DB.Query(`
-		SELECT * FROM comment WHERE blog_id=? AND parent_id=0
-		ORDER BY likes, ct DESC
-	`, blogId)
-	if err != nil {
-		return
-	}
-	defer rows.Close()
-
-	return m.getCommentList(rows)
-}
-
 func (m *Model) ListCommentByParentID(parentId int64) (list []*Comment, err error) {
-	rows, err := m.DB.Query(`
-		SELECT * FROM comment WHERE parent_id=?
-		ORDER BY likes, ct DESC
-	`, parentId)
-	if err != nil {
-		return
-	}
-	defer rows.Close()
-
-	return m.getCommentList(rows)
+	list = []*Comment{}
+	err = m.DB.Select(&list,
+		`SELECT * FROM comment WHERE parent_id=?`,
+		parentId)
+	return
 }

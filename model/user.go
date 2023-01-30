@@ -51,20 +51,3 @@ func (m *Model) GetUserIDBy(openID string) (int64, error) {
 
 	return user.ID, nil
 }
-
-func (m *Model) GetUser(id int64) (user *User, err error) {
-	user = &User{}
-	err = m.DB.QueryRow(`
-		SELECT * FROM user WHERE id=?
-	`, id).Scan(
-		&user.ID,
-		&user.OpenID,
-		&user.AuthType,
-		&user.Nickname,
-		&user.AvatarUrl,
-		&user.Email,
-		&user.Ct,
-	)
-
-	return
-}

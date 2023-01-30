@@ -36,13 +36,9 @@ func (m *Model) AddUserToken(userID int64) (token string, err error) {
 
 func (m *Model) GetUserToken(token string) (userToken *UserToken, err error) {
 	userToken = &UserToken{}
-	err = m.DB.QueryRow(`
-		SELECT user_id,token,expire_time FROM user_token WHERE token=?
-	`, token).Scan(
-		&userToken.UserID,
-		&userToken.Token,
-		&userToken.ExpireTime,
-	)
+	err = m.DB.Get(userToken,
+		`SELECT user_id,token,expire_time FROM user_token WHERE token=?`,
+		token)
 
 	return
 }
