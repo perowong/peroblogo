@@ -19,7 +19,16 @@ type LoginResp struct {
 	Token string
 }
 
-// user login
+// User login
+// @Summary Login to peroblog via github
+// @Description Client get the github code, which makes a deal with userinfo and Token
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param object query LoginReq false "Request params"
+// @Success 200 {object} LoginResp
+// @Failure 400 {object} ErrResp
+// @Router /user/login [POST]
 func Login(c *gin.Context) {
 	var req LoginReq
 	var err error

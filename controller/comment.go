@@ -27,6 +27,17 @@ type AddCommentResp struct {
 }
 
 // Add comment
+//
+// @Summary Add comment to blog by blog id
+// @Description Add a comment to first level or second level
+// @Tags comment
+// @Accept json
+// @Produce json
+// @Param Authorization header string false "Token"
+// @Param object query AddCommentReq false "Req params"
+// @Success 200 {object} AddCommentResp
+// @Failure 400 {object} ErrResp
+// @Router /comment/add [POST]
 func AddComment(c *gin.Context) {
 	var req AddCommentReq
 	var err error
@@ -101,6 +112,16 @@ type ListCommentResp struct {
 }
 
 // Query comment list
+//
+// @Summary Query blog comments by blog id
+// @Description Query blog comments by blog id, if it's null, it returns a []
+// @Tags comment
+// @Accept json
+// @Produce json
+// @Param object query ListCommentReq false "Require BlogID"
+// @Success 200 {object} ListCommentResp
+// @Failure 400 {object} ErrResp
+// @Router /comment/list [POST]
 func ListComment(c *gin.Context) {
 	var req ListCommentReq
 	ctxUtils := &GinCtxUtils{Context: c}

@@ -4,7 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/perowong/peroblogo/conf"
 	"github.com/perowong/peroblogo/controller"
+	_ "github.com/perowong/peroblogo/docs"
 	"github.com/perowong/peroblogo/middleware"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func SetupRouters() *gin.Engine {
@@ -28,4 +31,6 @@ func groupRouters(r *gin.Engine) {
 		groupWithoutAuth.POST("comment/list", controller.ListComment)
 		groupWithoutAuth.POST("user/login", controller.Login)
 	}
+
+	r.GET("/api/swagger-doc/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 }

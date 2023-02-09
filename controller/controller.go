@@ -39,14 +39,14 @@ func (c *GinCtxUtils) GetReqObject(req interface{}) (ok bool) {
 	return true
 }
 
-type Resp struct {
+type ErrResp struct {
 	ErrCode ErrCodeType
 	ErrMsg  string
 	Data    interface{}
 }
 
 func (c *GinCtxUtils) Reply(errCode ErrCodeType, errMsg string, data interface{}) {
-	resp := &Resp{
+	resp := &ErrResp{
 		ErrCode: errCode,
 		ErrMsg:  errMsg,
 		Data:    data,

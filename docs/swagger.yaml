@@ -1,0 +1,218 @@
+basePath: /api
+definitions:
+  controller.AddCommentResp:
+    properties:
+      ct:
+        type: string
+      id:
+        type: integer
+    type: object
+  controller.ErrCodeType:
+    enum:
+    - 0
+    - 1001
+    - 1002
+    - 1003
+    type: integer
+    x-enum-varnames:
+    - ErrCodeOk
+    - ErrCodeParam
+    - ErrCodeServer
+    - ErrCodeToken
+  controller.ErrResp:
+    properties:
+      data: {}
+      errCode:
+        $ref: '#/definitions/controller.ErrCodeType'
+      errMsg:
+        type: string
+    type: object
+  controller.ListCommentResp:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/model.Comment'
+        type: array
+    type: object
+  controller.LoginResp:
+    properties:
+      Ct:
+        type: string
+      authType:
+        type: string
+      avatarUrl:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      nickname:
+        type: string
+      openID:
+        type: string
+      token:
+        type: string
+    type: object
+  model.Comment:
+    properties:
+      blogID:
+        type: string
+      children:
+        items:
+          $ref: '#/definitions/model.Comment'
+        type: array
+      content:
+        type: string
+      ct:
+        type: string
+      fromAvatar:
+        type: string
+      fromNickname:
+        type: string
+      fromUid:
+        type: integer
+      id:
+        type: integer
+      isTop:
+        type: integer
+      likes:
+        type: integer
+      parentID:
+        type: integer
+      replyID:
+        type: integer
+      subCount:
+        type: integer
+      toAvatar:
+        type: string
+      toNickname:
+        type: string
+      toUid:
+        type: integer
+    type: object
+host: https://i.overio.space
+info:
+  contact:
+    email: ynwangpeng@gmail.com
+    name: Pero Wong
+    url: https://i.overio.space
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Peroblogo Api doc
+  version: "1.0"
+paths:
+  /comment/add:
+    post:
+      consumes:
+      - application/json
+      description: Add a comment to first level or second level
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        type: string
+      - in: query
+        name: blogID
+        required: true
+        type: string
+      - in: query
+        maxLength: 600
+        minLength: 1
+        name: content
+        required: true
+        type: string
+      - in: query
+        name: fromAvatar
+        type: string
+      - in: query
+        name: fromNickname
+        required: true
+        type: string
+      - in: query
+        name: fromUid
+        required: true
+        type: integer
+      - in: query
+        name: parentID
+        type: integer
+      - in: query
+        name: replyID
+        type: integer
+      - in: query
+        name: toAvatar
+        type: string
+      - in: query
+        name: toNickname
+        type: string
+      - in: query
+        name: toUid
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.AddCommentResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrResp'
+      summary: Add comment to blog by blog id
+      tags:
+      - comment
+  /comment/list:
+    post:
+      consumes:
+      - application/json
+      description: Query blog comments by blog id, if it's null, it returns a []
+      parameters:
+      - in: query
+        name: blogID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.ListCommentResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrResp'
+      summary: Query blog comments by blog id
+      tags:
+      - comment
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: Client get the github code, which makes a deal with userinfo and
+        Token
+      parameters:
+      - in: query
+        name: code
+        required: true
+        type: string
+      - in: query
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.LoginResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrResp'
+      summary: Login to peroblog via github
+      tags:
+      - user
+swagger: "2.0"
