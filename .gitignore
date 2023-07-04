@@ -1,9 +1,20 @@
-.idea/
+# System
 .DS_Store
 
+# IDE
+.idea/
+
+# Go build output
 peroblogo
 peroblogo.*
 dsn
+
+# Log
 log
 
+# Production configuration
 *.prod.yaml
+
+# Docker build secret keys dependencies
+.keys
+.netrc

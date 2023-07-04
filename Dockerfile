@@ -1,9 +1,17 @@
-FROM golang:alpine AS builder
+FROM golang:1.19 AS builder
 
 WORKDIR /build
-# RUN adduser -u 10001 -D app-runner
+
+ADD .netrc /root/
+
+ADD .keys/ /root/.ssh/
+RUN chmod 700 -R /root/.ssh/
+RUN echo "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
+RUN git config --global url.ssh://git@github.com/agent-chatee.insteadOf https://github.com/agent-chatee
 
 ENV GOPROXY https://goproxy.cn
+ENV GOPRIVATE github.com/agent-chatee
+
 COPY go.mod .
 COPY go.sum .
 RUN go mod download
