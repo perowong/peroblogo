@@ -1,9 +1,24 @@
+constant:
+  - &appName "peroblogo"
+
 app:
-  name: "peroblogo"
-  port: "8080"
+  name: *appName
+  addr: "0.0.0.0:8080"
+loggerConfig:
+  fileConfig:
+    logFilePath: "./log/peroblogo.log"
+    maxSize: 512  #文件最大尺寸,以MB为单位，超过即创建第二个文件
+    maxBackups: 10  #最大备份文件数
+    maxAge: 4 #保存时间
+    compress: false #是否压缩
+    console: true #是否是需要控制台输出
+    levelString: debug #日志输出等级，debug,info,warn,error,panic,fatal
+    appId: *appName
 mysql:
   db-peroblog:
     dsn: "root:test1234@tcp(127.0.0.1:3306)/peroblog?parseTime=true"
 github:
   client-id: "5598a074bbf4c0df5792"
   client-secret: "04fee23e05240af963cc1e9b8b111b71101c2174"
+serverNames:
+  test: "test"

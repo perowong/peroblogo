@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/perowong/peroblogo/controller"
-	"github.com/perowong/peroblogo/model"
+	"github.com/perowong/peroblogo/internal/http/controller"
+	"github.com/perowong/peroblogo/internal/model"
 )
 
 func AuthToken() gin.HandlerFunc {

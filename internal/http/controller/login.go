@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/perowong/peroblogo/api"
-	"github.com/perowong/peroblogo/model"
+	"github.com/perowong/peroblogo/internal/model"
 )
 
 type LoginReq struct {

@@ -1,0 +1,20 @@
+syntax = "proto3";
+package pb_test;
+option go_package = "github.com/agent-chatee/ai.chatee-go-api/grpc/pb/test";
+
+import "grpc/pb/lib/resp_msg.proto";
+
+// The service definition.
+service TestService {
+  rpc NotifyBxdPostAlbum(TestReq) returns (TestResp) {}
+}
+
+// The request message
+message TestReq {
+  int64 id = 1;
+}
+
+// The response message
+message TestResp {
+  pb_resp.RespMessage resp_msg = 1;
+}

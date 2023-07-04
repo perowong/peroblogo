@@ -2,7 +2,7 @@ package model
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/perowong/peroblogo/dao"
+	"github.com/perowong/peroblogo/internal/dao"
 )
 
 type Model struct {

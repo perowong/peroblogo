@@ -1,0 +1,33 @@
+syntax = "proto3";
+package pb_resp;
+option go_package = "github.com/perowong/peroblogo/grpc/pb/lib";
+
+enum RetCode {
+  Unknown            = 0;
+  Ok                 = 1;
+  Srv                = 2;
+  Para               = 3;
+  Register           = 4;
+  SignIn             = 5;
+  SignOut            = 6;
+  SignCheck          = 7;
+  Exist              = 8;
+  NotExist           = 9;
+  UpdateErr          = 10;
+  Occupied           = 11;
+  DeletionNotAllowed = 12;
+  StatusErr          = 13;
+  Max                = 100;  // 最大号段
+}
+
+message RespMessage {
+  // Error code
+  RetCode ret = 1;
+
+  // Error message
+  // @inject_tag: json:"msg"
+  string message = 2;
+
+  // Error detail
+  string detail = 3;
+}

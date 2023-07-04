@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/perowong/peroblogo/model"
+	"github.com/perowong/peroblogo/internal/model"
 )
 
 type AddCommentReq struct {

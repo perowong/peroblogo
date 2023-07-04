@@ -10,10 +10,12 @@ services:
       MYSQL_DATABASE: "peroblog"
     volumes:
       - ./init.sql:/data/application/init.sql
-  peroblogo:
-    build: .
-    command: sh -c "./wait-for.sh mysql8031-master:3306 -- ./peroblogo"
-    depends_on:
-      - mysql8031-master
-    ports:
-      - "8080:8080"
+  # peroblogo:
+  #   container_name: "peroblogo-api-serv"
+  #   image: "i.overio.space/peroblogo-api-serv"
+  #   build: .
+  #   command: sh -c "./wait-for.sh mysql8031-master:3306 -- ./peroblogo"
+  #   depends_on:
+  #     - mysql8031-master
+  #   ports:
+  #     - "8080:8080"
